@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,7 @@ return new class extends Migration
         Schema::create('travel_orders', function (Blueprint $table) {
             $table->id();
             $table->string('requester_name');
-            $table->string('destination_address'); // devem ser campos separados ou não? ou deve ser uma tabela especifica?
+            $table->string('destination');
             $table->date('departure_date');
             $table->date('return_date');
             $table->enum('status', ['requested', 'approved', 'canceled'])->default('requested');
