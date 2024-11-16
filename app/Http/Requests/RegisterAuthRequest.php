@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Enum\TravelOrderStatusEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexTravelOrderRequest extends FormRequest
+class RegisterAuthRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +23,9 @@ class IndexTravelOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'string|in:' . TravelOrderStatusEnum::valuesAsString(),
-            'from' => 'date|required_with:to',
-            'to' => 'date|required_with:from|after_or_equal:from',
-            'destination' => 'string'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ];
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\TravelOrder;
 use App\Enum\TravelOrderStatusEnum;
+use App\Exceptions\InvalidTravelOrderStatusException;
+use App\Models\TravelOrder;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TravelOrderService
 {
@@ -15,13 +17,16 @@ class TravelOrderService
         return $order->refresh();
     }
 
+    /**
+     * @throws HttpException|InvalidTravelOrderStatusException
+     */
     public function updateStatus(int $id, array $data): TravelOrder
     {
         $order = $this->show($id);
 
         if ($order->status === TravelOrderStatusEnum::APPROVED->value
             && $data['status'] === TravelOrderStatusEnum::CANCELED->value) {
-            throw new \Exception('Cannot cancel an approved order');
+            throw new InvalidTravelOrderStatusException();
         }
 
         $order->status = $data['status'];

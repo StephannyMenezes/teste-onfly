@@ -15,7 +15,7 @@ enum TravelOrderStatusEnum: string
 
     public static function valuesAsString(): string
     {
-        return implode(', ', self::values());
+        return implode(',', self::values());
     }
 
 }
