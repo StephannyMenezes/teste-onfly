@@ -4,7 +4,17 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     schema="RegisterAuthRequest",
+ *     @OA\Property(property="name", type="string", example="John Doe"),
+ *     @OA\Property(property="email", type="string", example="l2pCt@example.com"),
+ *     @OA\Property(property="password", type="string", example="password"),
+ *     @OA\Property(property="password_confirmation", type="string", example="password"),
+ * )
+ */
 class RegisterAuthRequest extends FormRequest
 {
     /**

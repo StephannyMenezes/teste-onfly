@@ -1,0 +1,509 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Travel Orders API",
+        "description": "API para gerenciar pedidos de viagens corporativas.",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api": {
+            "description": "Rotas principais da API"
+        },
+        "/api/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registra um novo usuário",
+                "operationId": "e492332f1cbf074dbafee4e78657d84c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterAuthRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNTE2MjM5MDIyfQ.YY9y3HqZBkxqGv4wZi5D2i0VX2Vt9H4JXyZV3eVlI4k"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos fornecidos"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Loga um usuário",
+                "operationId": "8dcb70df1020986038d098cc08d05dae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginAuthRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário logado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNTE2MjM5MDIyfQ.YY9y3HqZBkxqGv4wZi5D2i0VX2Vt9H4JXyZV3eVlI4k"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos fornecidos"
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Retorna o usuário autenticado",
+                "operationId": "b9abb1a7a74670a19c215c2c133f14d8",
+                "responses": {
+                    "200": {
+                        "description": "Usuário autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Desloga um usuário",
+                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "responses": {
+                    "200": {
+                        "description": "Usuário deslogado com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/travel-orders": {
+            "get": {
+                "tags": [
+                    "Travel Orders"
+                ],
+                "summary": "Listar todos os pedidos de viagem",
+                "operationId": "7236fc323bce8891193d5289450fe071",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status do pedido de viagem",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "approved",
+                                "canceled",
+                                "requested"
+                            ],
+                            "example": "approved"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Data inicial",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2024-12-01"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "Data final",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2024-12-31"
+                        }
+                    },
+                    {
+                        "name": "destination",
+                        "in": "query",
+                        "description": "Destino",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Paris"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos de viagem",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TravelOrder"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Travel Orders"
+                ],
+                "summary": "Criar um pedido de viagem",
+                "operationId": "932a17e33cbd078f31d994fef6f94bad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreTravelOrderRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pedido criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TravelOrder"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos fornecidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/travel-orders/{id}": {
+            "get": {
+                "tags": [
+                    "Travel Orders"
+                ],
+                "summary": "Consultar um pedido de viagem pelo ID",
+                "operationId": "0126daa5bf269e081b9bd4dbb0bd4b00",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do pedido de viagem",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do pedido de viagem",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TravelOrder"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pedido de viagem não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Travel Orders"
+                ],
+                "summary": "Atualizar o status de um pedido de viagem",
+                "operationId": "1cfd68609b596ad5d0cde4b660edc309",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do pedido de viagem",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTravelOrderStatusRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status do pedido de viagem atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TravelOrder"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Não é possível cancelar um pedido aprovado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginAuthRequest": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "l2pCt@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterAuthRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "l2pCt@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "example": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreTravelOrderRequest": {
+                "required": [
+                    "requester_name",
+                    "destination",
+                    "departure_date",
+                    "return_date"
+                ],
+                "properties": {
+                    "requester_name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "destination": {
+                        "type": "string",
+                        "example": "Paris"
+                    },
+                    "departure_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-01"
+                    },
+                    "return_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-10"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateTravelOrderStatusRequest": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "approved",
+                            "canceled"
+                        ],
+                        "example": "approved"
+                    }
+                },
+                "type": "object"
+            },
+            "TravelOrder": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "requester_name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "destination": {
+                        "type": "string",
+                        "example": "Paris"
+                    },
+                    "departure_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-01"
+                    },
+                    "return_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-10"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "solicitado"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-01"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-01"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "l2pCt@example.com"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-01"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-01"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Enter JWT Bearer token",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Endpoints relacionados a autenticação"
+        },
+        {
+            "name": "Travel Orders",
+            "description": "Endpoints relacionados a pedidos de viagem"
+        }
+    ]
+}

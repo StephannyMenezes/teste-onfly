@@ -5,7 +5,15 @@ namespace App\Http\Requests;
 use App\Enum\TravelOrderStatusEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdateTravelOrderStatusRequest",
+ *     type="object",
+ *     @OA\Property(property="status", type="string", enum={"approved", "canceled"}, example="approved")
+ * )
+ */
 class UpdateTravelOrderStatusRequest extends FormRequest
 {
     /**
