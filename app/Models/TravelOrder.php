@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\TravelOrderFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,6 +19,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TravelOrder extends Model
 {
+    /** @use HasFactory<TravelOrderFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'requester_name',
         'destination',
@@ -26,8 +31,8 @@ class TravelOrder extends Model
     ];
 
     protected $casts = [
-        'departure_date' => 'datetime',
-        'return_date' => 'datetime',
+        'departure_date' => 'date',
+        'return_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

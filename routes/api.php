@@ -14,8 +14,8 @@ Route::prefix('auth')->group(function () {
 Route::prefix('travel-orders')->group(function () {
     Route::post('/', [TravelOrderController::class, 'store'])->middleware('auth:api');
     Route::put('/{id}/status', [TravelOrderController::class, 'updateStatus'])->middleware('auth:api');
-    Route::get('/{id}', [TravelOrderController::class, 'show']);
-    Route::get('/', [TravelOrderController::class, 'index']);
-    Route::post('/{id}/notify', [TravelOrderController::class, 'notify']);
+    Route::get('/{id}', [TravelOrderController::class, 'show'])->middleware('auth:api');
+    Route::get('/', [TravelOrderController::class, 'index'])->middleware('auth:api');
+    Route::post('/{id}/notify', [TravelOrderController::class, 'notify'])->middleware('auth:api');
 });
 
