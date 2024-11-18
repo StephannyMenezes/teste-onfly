@@ -2,9 +2,9 @@
 
 ## Getting Started
 
-### Locally
-
 To set up the project, follow these steps:
+
+### Locally
 
 1. Clone the repository to your local machine.
 2. Install the dependencies by running `composer install`.
@@ -16,8 +16,9 @@ To set up the project, follow these steps:
 
 ### Docker
 
-1. Run `docker-compose up -d` or `./vendor/bin/sail up -d` while in the project directory
-2. Just wait for the automated deployment and it will be ready to use
+1. Clone the repository to your local machine.
+2. Run `docker-compose up -d` or `./vendor/bin/sail up -d` while in the project directory
+3. Just wait for the automated deployment and it will be ready to use
 
 ## API Documentation
 
