@@ -22,6 +22,7 @@ class TravelOrderFactory extends Factory
             'requester_name' => fake()->name(),
             'destination' => fake()->city(),
             'status' => TravelOrderStatusEnum::REQUESTED->value,
+            'notification_email' => null,
             'departure_date' => fake()->dateTimeBetween('now', '+1 month'),
             'return_date' => fake()->dateTimeBetween('+1 month', '+2 months'),
         ];

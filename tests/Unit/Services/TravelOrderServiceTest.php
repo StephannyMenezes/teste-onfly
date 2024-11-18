@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\Enum\TravelOrderStatusEnum;
 use App\Exceptions\InvalidTravelOrderStatusException;
 use App\Models\TravelOrder;
+use App\Models\User;
 use App\Services\TravelOrderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -78,5 +79,19 @@ class TravelOrderServiceTest extends TestCase
         $this->expectException(InvalidTravelOrderStatusException::class);
 
         $service->updateStatus($travelOrder->id, ['status' => $status]);
+    }
+
+    public function test_update_notification_email()
+    {
+        $service = new TravelOrderService();
+
+        $travelOrder = TravelOrder::factory()->create();
+
+        $user = User::factory()->create();
+
+        $response = $service->updateNotificationEmail($travelOrder->id, $user);
+
+        $this->assertEquals($travelOrder->id, $response->id);
+        $this->assertEquals($user->email, $response->notification_email);
     }
 }

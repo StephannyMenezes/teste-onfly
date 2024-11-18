@@ -6,6 +6,7 @@ use App\Http\Requests\IndexTravelOrderRequest;
 use App\Http\Requests\StoreTravelOrderRequest;
 use App\Http\Requests\UpdateTravelOrderStatusRequest;
 use App\Http\Resources\TravelOrderResource;
+use App\Models\User;
 use App\Services\TravelOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -182,5 +183,33 @@ class TravelOrderController extends Controller
         $order = $this->service->updateStatus($id, $request->validated());
 
         return response()->json(TravelOrderResource::make($order));
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/travel-orders/{id}/notify",
+     *     tags={"Travel Orders"},
+     *     summary="Notificar um pedido de viagem",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do pedido de viagem",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Notificações habilitadas com sucesso"
+     *     )
+     * )
+     */
+    public function notify($id): JsonResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        $this->service->updateNotificationEmail($id, $user);
+
+        return response()->json(null, 204);
     }
 }

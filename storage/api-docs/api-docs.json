@@ -143,6 +143,27 @@
                 "operationId": "7236fc323bce8891193d5289450fe071",
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "example": 10
+                        }
+                    },
+                    {
                         "name": "status",
                         "in": "query",
                         "description": "Status do pedido de viagem",
@@ -330,6 +351,37 @@
                     },
                     "400": {
                         "description": "Não é possível cancelar um pedido aprovado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/travel-orders/{id}/notify": {
+            "post": {
+                "tags": [
+                    "Travel Orders"
+                ],
+                "summary": "Notificar um pedido de viagem",
+                "operationId": "125b9294afd79b7c172c998fce3cd919",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do pedido de viagem",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Notificações habilitadas com sucesso"
                     }
                 },
                 "security": [

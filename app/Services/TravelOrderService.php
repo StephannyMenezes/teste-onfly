@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enum\TravelOrderStatusEnum;
 use App\Exceptions\InvalidTravelOrderStatusException;
 use App\Models\TravelOrder;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -69,5 +70,14 @@ class TravelOrderService
         $perPage = $data['per_page'] ?? 10;
 
         return $query->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    public function updateNotificationEmail(int $id, User $user): TravelOrder
+    {
+        $order = $this->show($id);
+        $order->notification_email = $user->email;
+        $order->save();
+
+        return $order;
     }
 }

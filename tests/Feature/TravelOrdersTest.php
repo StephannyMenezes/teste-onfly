@@ -4,9 +4,12 @@
 use App\Enum\TravelOrderStatusEnum;
 use App\Models\TravelOrder;
 use App\Models\User;
+use App\Notifications\TravelOrderStatusChanged;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class TravelOrdersTest extends TestCase
@@ -152,5 +155,48 @@ class TravelOrdersTest extends TestCase
         $response = $this->getJson("/api/travel-orders?from=$from&to=$to", ['Authorization' => 'Bearer ' . $token]);
 
         $response->assertStatus(200)->assertJsonCount($oneMonthQuantity, 'data');
+    }
+
+    public function test_notify()
+    {
+        $user = User::factory()->create();
+
+        $token = auth('api')->login($user);
+
+        $travelOrder = TravelOrder::factory()->create();
+
+        $response = $this->postJson('/api/travel-orders/' . $travelOrder->id . '/notify', [], ['Authorization' => 'Bearer ' . $token]);
+
+        $response->assertStatus(204);
+
+        $this->assertEquals($travelOrder->refresh()->notification_email, $user->email);
+    }
+
+    public function test_update_status_send_notification()
+    {
+        Notification::fake();
+
+        $user = User::factory()->create();
+
+        $token = auth('api')->login($user);
+
+        $travelOrder = TravelOrder::factory()->create();
+
+        $response = $this->postJson('/api/travel-orders/' . $travelOrder->id . '/notify', [], ['Authorization' => 'Bearer ' . $token]);
+
+        $response->assertStatus(204);
+
+        $response = $this->putJson('/api/travel-orders/' . $travelOrder->id . '/status', ['status' => TravelOrderStatusEnum::APPROVED->value], ['Authorization' => 'Bearer ' . $token]);
+
+        $response->assertStatus(200);
+
+        $this->assertEquals($travelOrder->refresh()->status, TravelOrderStatusEnum::APPROVED->value);
+
+        Notification::assertSentTo(
+            new AnonymousNotifiable,
+            TravelOrderStatusChanged::class,
+            function ($notification, $channels, $notifiable) use ($user) {
+                return $notifiable->routes['mail'] === $user->email;
+            });
     }
 }
