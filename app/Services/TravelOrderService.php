@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Enum\TravelOrderStatusEnum;
 use App\Exceptions\InvalidTravelOrderStatusException;
 use App\Models\TravelOrder;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TravelOrderService
@@ -42,14 +42,16 @@ class TravelOrderService
 
     /**
      * @param array{
+     *     page?: int,
+     *     per_page?: int,
      *     status?: string,
      *     from?: string,
      *     to?: string,
      *     destination?: string
      * } $data
-     * @return Collection
+     * @return LengthAwarePaginator
      */
-    public function index(array $data): Collection
+    public function index(array $data): LengthAwarePaginator
     {
         $query = TravelOrder::query();
 
@@ -63,6 +65,9 @@ class TravelOrderService
             $query->where('destination', $data['destination']);
         }
 
-        return $query->get();
+        $page = $data['page'] ?? 1;
+        $perPage = $data['per_page'] ?? 10;
+
+        return $query->paginate($perPage, ['*'], 'page', $page);
     }
 }

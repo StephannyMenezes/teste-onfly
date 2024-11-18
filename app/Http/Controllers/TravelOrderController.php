@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTravelOrderStatusRequest;
 use App\Http\Resources\TravelOrderResource;
 use App\Services\TravelOrderService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Annotations as OA;
 
 /**
@@ -31,6 +32,20 @@ class TravelOrderController extends Controller
      *     tags={"Travel Orders"},
      *     summary="Listar todos os pedidos de viagem",
      *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Número da página",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         required=false,
+     *         description="Quantidade de registros por página",
+     *         @OA\Schema(type="integer", example=10, maximum=100),
+     *     ),
      *     @OA\Parameter(
      *         name="status",
      *         in="query",
@@ -69,11 +84,11 @@ class TravelOrderController extends Controller
      *     )
      * )
      */
-    public function index(IndexTravelOrderRequest $request): JsonResponse
+    public function index(IndexTravelOrderRequest $request): AnonymousResourceCollection
     {
         $orders = $this->service->index($request->validated());
 
-        return response()->json(TravelOrderResource::collection($orders));
+        return TravelOrderResource::collection($orders);
     }
 
     /**

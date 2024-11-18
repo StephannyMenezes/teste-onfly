@@ -8,7 +8,6 @@ use App\Models\TravelOrder;
 use App\Services\TravelOrderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class TravelOrderServiceTest extends TestCase
@@ -21,10 +20,9 @@ class TravelOrderServiceTest extends TestCase
         $service = new TravelOrderService();
 
         $travelOrders = TravelOrder::factory()->count(5)->create();
-        
+
         $response = $service->index([]);
 
-        $this->assertInstanceOf(Collection::class, $response);
         $this->assertCount($travelOrders->count(), $response);
     }
 

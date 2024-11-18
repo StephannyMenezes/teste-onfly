@@ -24,6 +24,8 @@ class IndexTravelOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'page' => 'integer|min:1',
+            'per_page' => 'integer|min:1|max:100',
             'status' => 'string|in:' . TravelOrderStatusEnum::valuesAsString(),
             'from' => 'date|required_with:to',
             'to' => 'date|required_with:from|after_or_equal:from',
